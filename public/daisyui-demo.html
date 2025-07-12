@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>daisyUI 範例</title>
+    <link href="/css/app.css" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <div class="navbar bg-base-100 shadow-lg">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              ></path>
+            </svg>
+          </div>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li><a>首頁</a></li>
+            <li><a>關於我們</a></li>
+            <li><a>聯絡我們</a></li>
+          </ul>
+        </div>
+        <a class="btn btn-ghost text-xl">我的網站</a>
+      </div>
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+          <li><a>首頁</a></li>
+          <li><a>關於我們</a></li>
+          <li><a>聯絡我們</a></li>
+        </ul>
+      </div>
+      <div class="navbar-end">
+        <!-- Theme Toggle -->
+        <div class="dropdown dropdown-end">
+          <div tabindex="0" role="button" class="btn btn-ghost">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+              ></path>
+            </svg>
+          </div>
+          <ul
+            tabindex="0"
+            class="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box w-52"
+          >
+            <li>
+              <input
+                type="radio"
+                name="theme-dropdown"
+                class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+                aria-label="Light"
+                value="light"
+              />
+            </li>
+            <li>
+              <input
+                type="radio"
+                name="theme-dropdown"
+                class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+                aria-label="Dark"
+                value="dark"
+              />
+            </li>
+            <li>
+              <input
+                type="radio"
+                name="theme-dropdown"
+                class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+                aria-label="Cupcake"
+                value="cupcake"
+              />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero min-h-96 bg-base-200">
+      <div class="hero-content text-center">
+        <div class="max-w-md">
+          <h1 class="text-5xl font-bold">歡迎使用 daisyUI</h1>
+          <p class="py-6">
+            這是一個使用 daisyUI 元件庫的範例頁面，基於 Tailwind CSS
+            但提供了預設計的元件。
+          </p>
+          <div class="space-x-2">
+            <button class="btn btn-primary">主要按鈕</button>
+            <button class="btn btn-secondary">次要按鈕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats stats-vertical lg:stats-horizontal shadow w-full my-8">
+      <div class="stat">
+        <div class="stat-figure text-primary">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 30 20">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <div class="stat-title">快速開發</div>
+        <div class="stat-value text-primary">100%</div>
+        <div class="stat-desc">使用預設計元件</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-figure text-secondary">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 30 20">
+            <path
+              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+            ></path>
+          </svg>
+        </div>
+        <div class="stat-title">響應式設計</div>
+        <div class="stat-value text-secondary">98%</div>
+        <div class="stat-desc">適用於所有裝置</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-figure text-accent">
+          <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 30 20">
+            <path
+              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"
+            ></path>
+          </svg>
+        </div>
+        <div class="stat-title">主題支援</div>
+        <div class="stat-value text-accent">32+</div>
+        <div class="stat-desc">內建主題</div>
+      </div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="container mx-auto px-4 py-8">
+      <h2 class="text-3xl font-bold text-center mb-8">主要特色</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-base-100 shadow-xl">
+          <figure class="px-10 pt-10">
+            <div class="avatar placeholder">
+              <!--
+              <div class="bg-primary text-primary-content rounded-full w-16 ">
+                <span class="text-xl">⚡</span>
+              </div>
+            -->
+              <div
+                class="bg-primary text-primary-content rounded-full w-16 h-16 grid place-items-center"
+              >
+                <span class="text-xl">⚡</span>
+              </div>
+            </div>
+          </figure>
+          <div class="card-body items-center text-center">
+            <h3 class="card-title">快速開發</h3>
+            <p>使用預設計的元件快速建立美觀的用戶介面。</p>
+            <div class="card-actions">
+              <button class="btn btn-primary btn-sm">了解更多</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <figure class="px-10 pt-10">
+            <div class="avatar placeholder">
+              <div
+                class="bg-secondary text-secondary-content rounded-full w-16"
+              >
+                <span class="text-xl">📱</span>
+              </div>
+            </div>
+          </figure>
+          <div class="card-body items-center text-center">
+            <h3 class="card-title">響應式設計</h3>
+            <p>內建響應式設計，適用於桌面、平板和手機。</p>
+            <div class="card-actions">
+              <button class="btn btn-secondary btn-sm">了解更多</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card bg-base-100 shadow-xl">
+          <figure class="px-10 pt-10">
+            <div class="avatar placeholder">
+              <div class="bg-accent text-accent-content rounded-full w-16">
+                <span class="text-xl">🎨</span>
+              </div>
+            </div>
+          </figure>
+          <div class="card-body items-center text-center">
+            <h3 class="card-title">豐富主題</h3>
+            <p>32+ 內建主題，支援深色模式和自訂主題。</p>
+            <div class="card-actions">
+              <button class="btn btn-accent btn-sm">了解更多</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="container mx-auto px-4 py-8">
+      <div class="card bg-base-100 shadow-xl max-w-lg mx-auto">
+        <div class="card-body">
+          <h2 class="card-title justify-center text-2xl mb-6">聯絡我們</h2>
+          <form class="space-y-4">
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">姓名</span>
+              </label>
+              <input
+                type="text"
+                placeholder="請輸入您的姓名"
+                class="input input-bordered w-full"
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">電子郵件</span>
+              </label>
+              <input
+                type="email"
+                placeholder="請輸入您的電子郵件"
+                class="input input-bordered w-full"
+              />
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text">訊息</span>
+              </label>
+              <textarea
+                class="textarea textarea-bordered h-24 w-full"
+                placeholder="請輸入您的訊息"
+              ></textarea>
+            </div>
+
+            <div class="form-control mt-6">
+              <button class="btn btn-primary w-full">送出訊息</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Examples -->
+    <div class="container mx-auto px-4 py-8">
+      <h2 class="text-2xl font-bold mb-4">通知範例</h2>
+      <div class="space-y-4">
+        <div class="alert alert-info">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          <span>這是一個資訊通知！</span>
+        </div>
+
+        <div class="alert alert-success">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+          <span>操作成功完成！</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      class="footer footer-center p-10 bg-base-200 text-base-content rounded"
+    >
+      <nav class="grid grid-flow-col gap-4">
+        <a class="link link-hover">關於我們</a>
+        <a class="link link-hover">聯絡方式</a>
+        <a class="link link-hover">隱私政策</a>
+        <a class="link link-hover">服務條款</a>
+      </nav>
+      <nav>
+        <div class="grid grid-flow-col gap-4">
+          <a class="link link-hover">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"
+              />
+            </svg>
+          </a>
+        </div>
+      </nav>
+      <aside>
+        <p>© 2025 我的網站. 使用 daisyUI 建立.</p>
+      </aside>
+    </footer>
+  </body>
+</html>
