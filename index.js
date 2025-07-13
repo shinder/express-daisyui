@@ -11,11 +11,15 @@ app.use(express.static("public"));
 // 基本路由
 app.get("/", (req, res) => {
   res.render("home", { name: "Shinder" });
-  // res.send(`
-  //   <h1>歡迎來到 Express 應用程式</h1>
-  //   <p>使用 ES Modules (ESM) 語法</p>
-  //   <p>目前時間：${new Date().toLocaleString("zh-TW")}</p>
-  // `);
+});
+
+app.get("/sales-array", (req, res) => {
+  const sales = [
+    { name: "Bill", age: 28, id: "A001" },
+    { name: "Peter", age: 32, id: "A002" },
+    { name: "Carl", age: 29, id: "A003" },
+  ];
+  res.render("sales-array", { sales });
 });
 
 app.get("/about", (req, res) => {

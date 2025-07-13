@@ -1,0 +1,25 @@
+<%- include('partials/html-head') %> <%- include('partials/html-navbar') %>
+<div class="container mx-auto flex flex-col items-center justify-center">
+  <div class="mt-4">
+    <h1 class="text-2xl font-bold">Sales Array 範例</h1>
+    <table class="table table-zebra border border-base-300">
+      <thead class="bg-base-300">
+        <tr>
+          <th>員工編號</th>
+          <th>姓名</th>
+          <th>年齡</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let s of sales){ %>
+        <tr>
+          <td><%= s.id %></td>
+          <td><%= s.name %></td>
+          <td><%= s.age %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('partials/html-scripts') %> <%- include('partials/html-tail') %>
