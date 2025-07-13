@@ -1,0 +1,16 @@
+### 測試 API
+POST http://localhost:3001/try-post
+Content-Type: application/json
+
+{
+    "name": "烏薩奇",
+    "email": "rabbit@example.com",
+    "message": "這是一個測試訊息"
+}
+
+### 這是分隔線
+### 測試 URL-encoded 表單
+POST http://localhost:3001/try-post
+Content-Type: application/x-www-form-urlencoded
+
+name=小吉&email=geee@example.com&message=您好

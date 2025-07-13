@@ -29,12 +29,13 @@ app.get("/sales-array", (req, res) => {
 app.get("/try-post-form", (req, res) => {
   res.render("try-post-form");
 });
-// 取得 urlencoded parser, 使用 qs lib, 而不使用內建的 querystring lib
-const urlencodedParser = express.urlencoded({ extended: true });
 
-// 把 urlencodedParser 當 middleware
-app.post("/try-post-form", urlencodedParser, (req, res) => {
+app.post("/try-post-form", (req, res) => {
   res.render("try-post-form", req.body);
+});
+
+app.post("/try-post", (req, res) => {
+  res.json(req.body);
 });
 
 // 404 處理（必須放在所有路由之後）
