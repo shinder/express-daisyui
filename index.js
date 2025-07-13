@@ -7,6 +7,10 @@ const port = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+// 全域中介軟體：處理 URL-encoded 表單資料
+app.use(express.urlencoded({ extended: true }));
+// 全域中介軟體：解析 application/json
+app.use(express.json());
 
 // 基本路由
 app.get("/", (req, res) => {
@@ -22,17 +26,15 @@ app.get("/sales-array", (req, res) => {
   res.render("sales-array", { sales });
 });
 
-app.get("/about", (req, res) => {
-  res.send("<h1>關於我們</h1><p>這是使用 Express 和 ESM 的範例。</p>");
+app.get("/try-post-form", (req, res) => {
+  res.render("try-post-form");
 });
+// 取得 urlencoded parser, 使用 qs lib, 而不使用內建的 querystring lib
+const urlencodedParser = express.urlencoded({ extended: true });
 
-// JSON API 路由
-app.get("/api/info", (req, res) => {
-  res.json({
-    name: "My Express App",
-    version: "1.0.0",
-    timestamp: new Date().toISOString(),
-  });
+// 把 urlencodedParser 當 middleware
+app.post("/try-post-form", urlencodedParser, (req, res) => {
+  res.render("try-post-form", req.body);
 });
 
 // 404 處理（必須放在所有路由之後）
