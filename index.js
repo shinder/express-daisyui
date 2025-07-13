@@ -12,6 +12,20 @@ app.use(express.urlencoded({ extended: true }));
 // 全域中介軟體：解析 application/json
 app.use(express.json());
 
+// 記錄請求的中介軟體
+const requestLogger = (req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${req.method} ${req.url}`);
+
+  if (req.body && Object.keys(req.body).length > 0) {
+    console.log("主體內容：", req.body);
+  }
+  next();
+};
+
+// 全域使用自訂中介軟體
+app.use(requestLogger);
+
 // 基本路由
 app.get("/", (req, res) => {
   res.render("home", { name: "Shinder" });
