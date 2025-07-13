@@ -1105,9 +1105,6 @@
       border-width: var(--border, 1px) 0 var(--border, 1px) var(--border, 1px);
     }
   }
-  .me-auto {
-    margin-inline-end: auto;
-  }
   .mt-3 {
     margin-top: calc(var(--spacing) * 3);
   }
@@ -1355,9 +1352,6 @@
   .h-8 {
     height: calc(var(--spacing) * 8);
   }
-  .h-16 {
-    height: calc(var(--spacing) * 16);
-  }
   .h-24 {
     height: calc(var(--spacing) * 24);
   }
@@ -1367,11 +1361,11 @@
   .min-h-96 {
     min-height: calc(var(--spacing) * 96);
   }
+  .min-h-screen {
+    min-height: 100vh;
+  }
   .btn-block {
     width: 100%;
-  }
-  .w-1\/2 {
-    width: calc(1/2 * 100%);
   }
   .w-5 {
     width: calc(var(--spacing) * 5);
@@ -1381,9 +1375,6 @@
   }
   .w-8 {
     width: calc(var(--spacing) * 8);
-  }
-  .w-12 {
-    width: calc(var(--spacing) * 12);
   }
   .w-16 {
     width: calc(var(--spacing) * 16);
@@ -1425,9 +1416,6 @@
   .cursor-default {
     cursor: default;
   }
-  .cursor-pointer {
-    cursor: pointer;
-  }
   .stats-vertical {
     grid-auto-flow: row;
     overflow-y: auto;
@@ -1445,8 +1433,8 @@
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
-  .place-items-center {
-    place-items: center;
+  .flex-col {
+    flex-direction: column;
   }
   .items-center {
     align-items: center;
@@ -1560,9 +1548,6 @@
   .bg-base-300 {
     background-color: var(--color-base-300);
   }
-  .bg-neutral {
-    background-color: var(--color-neutral);
-  }
   .bg-primary {
     background-color: var(--color-primary);
   }
@@ -1599,9 +1584,6 @@
   .text-center {
     text-align: center;
   }
-  .align-middle {
-    vertical-align: middle;
-  }
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -1631,9 +1613,6 @@
   .text-base-content {
     color: var(--color-base-content);
   }
-  .text-neutral-content {
-    color: var(--color-neutral-content);
-  }
   .text-primary {
     color: var(--color-primary);
   }
@@ -1645,9 +1624,6 @@
   }
   .text-secondary-content {
     color: var(--color-secondary-content);
-  }
-  .text-warning {
-    color: var(--color-warning);
   }
   .link-hover {
     text-decoration-line: none;

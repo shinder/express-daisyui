@@ -4,15 +4,18 @@ import "dotenv/config";
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.set("view engine", "ejs");
+
 app.use(express.static("public"));
 
 // 基本路由
 app.get("/", (req, res) => {
-  res.send(`
-    <h1>歡迎來到 Express 應用程式</h1>
-    <p>使用 ES Modules (ESM) 語法</p>
-    <p>目前時間：${new Date().toLocaleString("zh-TW")}</p>
-  `);
+  res.render("home", { name: "Shinder" });
+  // res.send(`
+  //   <h1>歡迎來到 Express 應用程式</h1>
+  //   <p>使用 ES Modules (ESM) 語法</p>
+  //   <p>目前時間：${new Date().toLocaleString("zh-TW")}</p>
+  // `);
 });
 
 app.get("/about", (req, res) => {
