@@ -1,6 +1,14 @@
 import express from "express";
 import "dotenv/config";
+import multer from "multer";
 
+const upload = multer({
+  dest: "uploads/", // 設定上傳檔案的儲存目錄
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 檔案大小限制，最大 5MB
+    files: 3, // 檔案數量限制，最多 3 個檔案
+  },
+});
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -50,6 +58,18 @@ app.post("/try-post-form", (req, res) => {
 
 app.post("/try-post", (req, res) => {
   res.json(req.body);
+});
+
+// 單一檔案上傳
+app.post("/try-upload", upload.single("avatar"), (req, res) => {
+  const { file, body } = req;
+  console.log(file); // 上傳的文件信息
+  console.log(body); // 其他表單文字欄位
+  res.json({ file, body });
+});
+// 一個欄位上傳多個檔案
+app.post("/try-uploads", upload.array("photos"), (req, res) => {
+  res.json(req.files);
 });
 
 // 404 處理（必須放在所有路由之後）
