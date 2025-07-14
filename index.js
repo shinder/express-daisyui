@@ -2,6 +2,10 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import moment from "moment-timezone";
+import cors from "cors";
+import { z } from "zod";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import "dotenv/config";
 // import multer from "multer";
 
@@ -15,7 +19,8 @@ import "dotenv/config";
 import upload from "./utils/upload-images.js"; // 引入自訂的上傳中介軟體
 import pool from "./utils/connect-mysql.js";
 import admin2Router from "./routes/admin2.js";
-import MySQLStore from 'express-mysql-session';
+import abRouter from "./routes/address-book.js";
+import MySQLStore from "express-mysql-session";
 
 // 建立 Session Store
 const MySQLStoreClass = MySQLStore(session);
@@ -27,6 +32,14 @@ const port = process.env.PORT || 3000;
 app.set("view engine", "ejs");
 
 app.use(express.static("public"));
+const corsOptions = {
+  credentials: true,
+  origin: (origin, cb) => {
+    // console.log({ origin });
+    cb(null, true);
+  },
+};
+app.use(cors(corsOptions));
 // 全域中介軟體：處理 URL-encoded 表單資料
 app.use(express.urlencoded({ extended: true }));
 // 全域中介軟體：解析 application/json
@@ -61,18 +74,44 @@ const requestLogger = (req, res, next) => {
 // 全域使用自訂中介軟體
 app.use(requestLogger);
 
-// 基本路由
+// ************* 自訂的頂層 "中間件, 中介軟體" *************
+app.use((req, res, next) => {
+  res.locals.title = "小新的網站";
+  res.locals.pageName = "";
+  res.locals.session = req.session; // 讓所有的 EJS 可以用 session 變數
+  res.locals.query = req.query;
+
+  const auth = req.get("Authorization");
+  if (auth && auth.indexOf("Bearer ") === 0) {
+    const token = auth.slice(7);
+    try {
+      req.my_jwt = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (ex) {}
+  }
+  next();
+});
+
+// 路由處理器
+// 1. HTTP 方法, 2. URL
 app.get("/", (req, res) => {
+  res.locals.title = "首頁 - " + res.locals.title;
   res.render("home", { name: "Shinder" });
 });
 
 app.get("/sales-array", (req, res) => {
+  res.locals.title = "Sales - " + res.locals.title;
+  res.locals.pageName = "sales-array";
   const sales = [
     { name: "Bill", age: 28, id: "A001" },
     { name: "Peter", age: 32, id: "A002" },
     { name: "Carl", age: 29, id: "A003" },
   ];
   res.render("sales-array", { sales });
+});
+
+app.get("/try-qs", (req, res) => {
+  // express@5 的行為和 express@4 的行為不同
+  res.json(req.query);
 });
 
 app.get("/try-post-form", (req, res) => {
@@ -102,7 +141,7 @@ app.post("/try-uploads", upload.array("photos"), (req, res) => {
 app.get("/params-1/:action/:id", (req, res) => {
   res.json(req.params);
 });
-
+// 路徑參數, 動態路由 (比較寬鬆的路由條件放後面)
 app.get("/params-2/:action?/:id?", (req, res) => {
   res.json(req.params);
 });
@@ -128,6 +167,7 @@ app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res) => {
 });
 
 app.use("/admins", admin2Router);
+app.use("/address-book", abRouter);
 
 // 設定 cookie 的路由
 app.get("/my-set-cookie", (req, res) => {
@@ -179,6 +219,13 @@ app.get("/try-moment", (req, res) => {
   });
 });
 
+app.get("/yahoo", async (req, res) => {
+  const r = await fetch("https://tw.yahoo.com/");
+  const txt = await r.text();
+  res.send(txt);
+});
+
+// 測試資料庫連線
 app.get("/try-db", async (req, res) => {
   const sql = "SELECT * FROM address_book LIMIT 3";
 
@@ -200,9 +247,132 @@ app.get("/try-db2", async (req, res) => {
   res.json(result);
 });
 
-// 404 處理（必須放在所有路由之後）
+// http://localhost:3001/try-zod?account=aaabbb&password=123456
+app.get("/try-zod", async (req, res) => {
+  const schema = z.object({
+    account: z.string({ message: "必填" }).min(5, { message: "至少五個字元" }),
+    password: z.string().min(6).max(10),
+  });
+
+  res.json(schema.safeParse(req.query));
+});
+
+/*
+app.use(express.static("build"));
+app.get("*", (req, res)=>{
+  res.send(`<!doctype html><html lang="zh"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><meta name="description" content="Shinder react hooks"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"/><title>Shinder react hooks</title><script defer="defer" src="/static/js/main.6a205622.js"></script></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>`)
+})
+  */
+app.get("/bcrypt1", async (req, res) => {
+  const pw = "123456";
+  const hash = await bcrypt.hash(pw, 10); // 取得 hash
+  res.send(hash);
+});
+app.get("/bcrypt2", async (req, res) => {
+  const pw = "123456";
+  const hash = "$2b$10$.tCwSbb0Hc8TP/GGzE.3H.TmXzVPu9Df7vy7QlZj4OnmIZzSTP.ci";
+  const result = await bcrypt.compare(pw, hash); // 比對
+  res.send({ result });
+});
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+app.get("/login", (req, res) => {
+  res.locals.pageName = "login";
+  res.render("login");
+});
+app.post("/login", upload.none(), async (req, res) => {
+  const { email, password } = req.body;
+  const zodResult = loginSchema.safeParse({ email, password });
+  if (!zodResult.success) {
+    return res.status(400).json({ success: false });
+  }
+
+  const sql = "SELECT * FROM members WHERE email=?";
+  const [rows] = await pool.query(sql, [email]);
+  if (!rows.length) {
+    // 帳號是錯的
+    return res.status(404).json({ success: false, code: 12 });
+  }
+  if (!(await bcrypt.compare(password, rows[0].password_hash))) {
+    // 密碼是錯的
+    return res.status(404).json({ success: false, code: 34 });
+  }
+  req.session.admin = {
+    id: rows[0].member_id,
+    email,
+    nickname: rows[0].nickname,
+  };
+  res.json({ success: true });
+});
+app.get("/logout", (req, res) => {
+  // req.get(): 取得用戶端送過來的 Header
+  const goBack = req.get("Referer") || "/";
+  delete req.session.admin;
+  req.session.save((error) => {
+    res.redirect(goBack);
+  });
+});
+app.get("/jwt01", async (req, res) => {
+  // 加密資料
+  const token = jwt.sign({ name: "shinder" }, process.env.JWT_SECRET);
+  res.send(token);
+});
+app.get("/jwt02", async (req, res) => {
+  // 解密資料
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic2hpbmRlciIsImlhdCI6MTc1MTk1MjcwOH0.5GOKj-DSOgHABYYvHc0vsGFvmRPduwBH1MAHiGSwE8U";
+
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    res.json(payload);
+  } catch (ex) {
+    res.send("無效的 JWT");
+  }
+});
+app.post("/login-jwt", upload.none(), async (req, res) => {
+  const { email, password } = req.body;
+  const zodResult = loginSchema.safeParse({ email, password });
+  if (!zodResult.success) {
+    return res.status(400).json({ success: false });
+  }
+
+  const sql = "SELECT * FROM members WHERE email=?";
+  const [rows] = await pool.query(sql, [email]);
+  if (!rows.length) {
+    // 帳號是錯的
+    return res.status(404).json({ success: false, code: 12 });
+  }
+  if (!(await bcrypt.compare(password, rows[0].password_hash))) {
+    // 密碼是錯的
+    return res.status(404).json({ success: false, code: 34 });
+  }
+  // 要打包進 token 的資料
+  const payload = {
+    id: rows[0].member_id,
+    email,
+  };
+
+  const token = jwt.sign(payload, process.env.JWT_SECRET);
+  res.json({
+    success: true,
+    token,
+    id: rows[0].member_id,
+    email,
+    nickname: rows[0].nickname,
+  });
+});
+app.get("/jwt-data", (req, res) => {
+  res.json(req.my_jwt);
+});
+
+// ********** 404 此段放在所有路由設定的後面 **********
 app.use((req, res) => {
-  res.status(404).send("<h1>404 - 頁面不存在</h1>");
+  res.status(404).send(`<h1>404 - 頁面不存在</h1>
+    <div><img src="/imgs/404.webp" width="300" /></div>
+    `);
 });
 
 // 啟動伺服器
