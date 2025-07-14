@@ -1,80 +1,67 @@
-<%- include("../partials/html-head") %>
-<%- include("../partials/html-navbar") %>
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <nav aria-label="Page navigation example">
-        <ul class="pagination">
-          <li class="page-item <%= page==1 ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=1">
-              <i class="fa-solid fa-angles-left"></i>
-            </a>
-          </li>
-          <li class="page-item <%= page==1 ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=<%= page-1 %>">
-              <i class="fa-solid fa-angle-left"></i>
-            </a>
-          </li>
-          <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
-          if(page==i){ %>
-          <li class="page-item active">
-            <span class="page-link"><%= i %></span>
-          </li>
-          <% } else { %>
-          <li class="page-item">
-            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
-          </li>
-          <% } %> <% } %>
-          <li class="page-item <%= page==totalPages ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=<%= page+1 %>">
-              <i class="fa-solid fa-angle-right"></i>
-            </a>
-          </li>
-          <li class="page-item <%= page==totalPages ? 'disabled' : '' %>">
-            <a class="page-link" href="?page=<%= totalPages %>">
-              <i class="fa-solid fa-angles-right"></i>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+<%- include("../partials/html-head") %> <%- include("../partials/html-navbar")
+%>
+<div class="container mx-auto px-4">
+  <div class="mb-4">
+    <nav aria-label="Page navigation example">
+      <div class="btn-group">
+        <a class="btn <%= page==1 ? 'btn-disabled' : '' %>" href="?page=1">
+          <i class="fa-solid fa-angles-left"></i>
+        </a>
+        <a
+          class="btn <%= page==1 ? 'btn-disabled' : '' %>"
+          href="?page=<%= page-1 %>"
+        >
+          <i class="fa-solid fa-angle-left"></i>
+        </a>
+        <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
+        if(page==i){ %>
+        <span class="btn btn-active"><%= i %></span>
+        <% } else { %>
+        <a class="btn" href="?page=<%= i %>"><%= i %></a>
+        <% } %> <% } %>
+        <a
+          class="btn <%= page==totalPages ? 'btn-disabled' : '' %>"
+          href="?page=<%= page+1 %>"
+        >
+          <i class="fa-solid fa-angle-right"></i>
+        </a>
+        <a
+          class="btn <%= page==totalPages ? 'btn-disabled' : '' %>"
+          href="?page=<%= totalPages %>"
+        >
+          <i class="fa-solid fa-angles-right"></i>
+        </a>
+      </div>
+    </nav>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-
-            <th>#</th>
-            <th>姓名</th>
-            <th>手機</th>
-            <th>電郵</th>
-            <th>生日</th>
-            <th>地址</th>
-
-          </tr>
-        </thead>
-        <tbody>
-          <% for(let r of rows){ %>
-          <tr>
-
-            <td><%= r.ab_id %></td>
-            <td><%= r.name %></td>
-            <td><%= r.mobile %></td>
-            <td><%= r.email %></td>
-            <td><%= r.birthday %></td>
-            <td><%= r.address %></td>
-
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
-    </div>
+  <div class="overflow-x-auto mt-4">
+    <table class="table table-zebra border border-base-300">
+      <thead class="bg-base-300">
+        <tr>
+          <th>#</th>
+          <th>姓名</th>
+          <th>手機</th>
+          <th>電郵</th>
+          <th>生日</th>
+          <th>地址</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let r of rows){ %>
+        <tr>
+          <td><%= r.ab_id %></td>
+          <td><%= r.name %></td>
+          <td><%= r.mobile %></td>
+          <td><%= r.email %></td>
+          <td><%= r.birthday %></td>
+          <td><%= r.address %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 
-  <%- include("../partials/html-scripts") %>
-
-
-  <%- include("../partials/html-tail") %>
+  <%- include("../partials/html-scripts") %> <%-
+  include("../partials/html-tail") %>
 </div>
