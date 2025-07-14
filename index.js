@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
 // import multer from "multer";
 
@@ -22,6 +23,8 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 // 全域中介軟體：解析 application/json
 app.use(express.json());
+
+app.use(cookieParser()); // 全域中介軟體：解析 cookies
 
 // 記錄請求的中介軟體
 const requestLogger = (req, res, next) => {
@@ -104,6 +107,32 @@ app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res) => {
 });
 
 app.use("/admins", admin2Router);
+
+// 設定 cookie 的路由
+app.get("/my-set-cookie", (req, res) => {
+  // 基本設定
+  res.cookie("username", "shinder"); // 不設定過期時間，瀏覽器關閉時刪除
+
+  // 完整選項設定
+  res.cookie("userToken", "secure-token-123", {
+    maxAge: 2 * 60 * 60 * 1000, // 2小時後過期
+    // expires: new Date(Date.now() + 2 * 60 * 60 * 1000), // 或使用 expires
+    httpOnly: true, // 防止 XSS 攻擊
+    // secure: process.env.NODE_ENV === "production", // 生產環境使用 HTTPS
+    sameSite: "strict", // 防止 CSRF 攻擊
+    path: "/", // 整個網站都可存取
+    // domain: ".example.com", // 指定域名
+  });
+
+  res.send("Cookie 已設定");
+});
+
+// 顯示 cookie 的路由
+app.get("/my-get-cookie", (req, res) => {
+  const username = req.cookies.username || "訪客";
+  const userToken = req.cookies.userToken || "無效的 Token";
+  res.json({ username, userToken });
+});
 
 // 404 處理（必須放在所有路由之後）
 app.use((req, res) => {
