@@ -15,6 +15,11 @@ import "dotenv/config";
 import upload from "./utils/upload-images.js"; // 引入自訂的上傳中介軟體
 import pool from "./utils/connect-mysql.js";
 import admin2Router from "./routes/admin2.js";
+import MySQLStore from 'express-mysql-session';
+
+// 建立 Session Store
+const MySQLStoreClass = MySQLStore(session);
+const sessionStore = new MySQLStoreClass({}, pool);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,6 +43,7 @@ app.use(
     // cookie: {
     //   maxAge: 1200_000, // 20分鐘，單位毫秒
     // },
+    store: sessionStore, // 使用 MySQL 作為 session 儲存
   })
 );
 
