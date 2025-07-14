@@ -19,6 +19,7 @@
     "express-session": "^1.18.1",
     "moment-timezone": "^0.6.0",
     "multer": "^2.0.1",
+    "mysql2": "^3.14.2",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

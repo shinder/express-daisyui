@@ -13,6 +13,7 @@ import "dotenv/config";
 //   },
 // });
 import upload from "./utils/upload-images.js"; // 引入自訂的上傳中介軟體
+import pool from "./utils/connect-mysql.js";
 import admin2Router from "./routes/admin2.js";
 
 const app = express();
@@ -170,6 +171,27 @@ app.get("/try-moment", (req, res) => {
     m1z: m1.tz("Europe/London").format(fm),
     m2z: m2.tz("Europe/London").format(fm),
   });
+});
+
+app.get("/try-db", async (req, res) => {
+  const sql = "SELECT * FROM address_book LIMIT 3";
+
+  // 第一個值為查詢的結果，第二個值為資料表欄位定義的相關資料
+  const [rows, fields] = await pool.query(sql);
+  res.json(rows);
+});
+
+app.get("/try-db2", async (req, res) => {
+  const sql = `INSERT INTO address_book
+    (name, email, mobile, address) VALUES (?, ?, ?, ?);`;
+  // ? 是佔位符，會被後面的值替換，可以防止 SQL 注入攻擊
+  const [result] = await pool.query(sql, [
+    "小新",
+    "shinder@test.com",
+    "0912345678",
+    "台北市信義區",
+  ]);
+  res.json(result);
 });
 
 // 404 處理（必須放在所有路由之後）
