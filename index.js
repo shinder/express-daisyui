@@ -1,14 +1,17 @@
 import express from "express";
 import "dotenv/config";
-import multer from "multer";
+// import multer from "multer";
 
-const upload = multer({
-  dest: "uploads/", // 設定上傳檔案的儲存目錄
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 檔案大小限制，最大 5MB
-    files: 3, // 檔案數量限制，最多 3 個檔案
-  },
-});
+// const upload = multer({
+//   dest: "uploads/", // 設定上傳檔案的儲存目錄
+//   limits: {
+//     fileSize: 5 * 1024 * 1024, // 檔案大小限制，最大 5MB
+//     files: 3, // 檔案數量限制，最多 3 個檔案
+//   },
+// });
+import upload from "./utils/upload-images.js"; // 引入自訂的上傳中介軟體
+import admin2Router from "./routes/admin2.js";
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -71,6 +74,37 @@ app.post("/try-upload", upload.single("avatar"), (req, res) => {
 app.post("/try-uploads", upload.array("photos"), (req, res) => {
   res.json(req.files);
 });
+
+app.get('/params-1/:action/:id', (req, res)=>{
+    res.json(req.params);
+});
+
+app.get('/params-2/:action?/:id?', (req, res)=>{
+    res.json(req.params);
+});
+
+app.get('/params-3/:userId(\\d+)/profile', (req, res)=>{
+    res.json(req.params);
+});
+
+app.get(/^\/hi\/?/, (req, res)=>{
+    let result = {
+        url : req.url
+    };
+    result.split = req.url.split('/');
+    res.json(result);
+});
+
+// 台灣手機號碼
+app.get(/^\/m\/09\d{2}-?\d{3}-?\d{3}$/i, (req, res)=>{
+    let u = req.url.slice(3);
+    u = u.split('?')[0];
+    u = u.split('-').join('');
+    res.json({ u });
+});
+
+app.use("/admins", admin2Router);
+
 
 // 404 處理（必須放在所有路由之後）
 app.use((req, res) => {

@@ -6,3 +6,5 @@ node_modules/
 .vscode/
 
 public/css/app.css
+public/images/
+uploads/
