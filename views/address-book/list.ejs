@@ -1,0 +1,228 @@
+<%- include("../partials/html-head") %>
+<%- include("../partials/html-navbar") %>
+<style>
+  b {
+    color: red;
+    font-weight: 900;
+  }
+  .favorite-hearts {
+    cursor: pointer;
+    color: red;
+    .fa-solid {
+      display: none;
+    }
+    .fa-regular {
+      display: inline-block;
+    }
+  }
+  .favorite-hearts.liked {
+    .fa-solid {
+      display: inline-block;
+    }
+    .fa-regular {
+      display: none;
+    }
+  }
+</style>
+<div class="container">
+  <div class="row">
+    <div class="col-6"></div>
+    <div class="col-6">
+      <form class="d-flex" role="search">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          name="keyword"
+          value="<%= query.keyword || '' %>"
+        />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item <%= page==1 ? 'disabled' : '' %>">
+            <a
+              class="page-link"
+              href="?<%- new URLSearchParams({...query, page:1}) %>"
+            >
+              <i class="fa-solid fa-angles-left"></i>
+            </a>
+          </li>
+          <li class="page-item <%= page==1 ? 'disabled' : '' %>">
+            <a
+              class="page-link"
+              href="?<%- new URLSearchParams({...query, page:page-11}) %>"
+            >
+              <i class="fa-solid fa-angle-left"></i>
+            </a>
+          </li>
+          <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
+          if(page==i){ %>
+          <li class="page-item active">
+            <span class="page-link"><%= i %></span>
+          </li>
+          <% } else { %>
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="?<%- new URLSearchParams({...query, page: i}) %>"
+              ><%= i %></a
+            >
+          </li>
+          <% } %> <% } %>
+          <li class="page-item <%= page==totalPages ? 'disabled' : '' %>">
+            <a
+              class="page-link"
+              href="?<%- new URLSearchParams({...query, page:page+1}) %>"
+            >
+              <i class="fa-solid fa-angle-right"></i>
+            </a>
+          </li>
+          <li class="page-item <%= page==totalPages ? 'disabled' : '' %>">
+            <a
+              class="page-link"
+              href="?<%- new URLSearchParams({...query, page:totalPages}) %>"
+            >
+              <i class="fa-solid fa-angles-right"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>
+              <input
+                class="toggle-all"
+                type="checkbox"
+                onclick="toggleAll(event)"
+              />
+              全選 <br />
+              <button class="btn btn-danger" onclick="deleteSelected(event)">
+                刪除所選
+              </button>
+            </th>
+            <th><i class="fa-solid fa-trash"></i></th>
+            <th>#</th>
+            <th>姓名</th>
+            <th>手機</th>
+            <th>電郵</th>
+            <th>生日</th>
+            <th>地址</th>
+            <th><i class="fa-solid fa-pen-to-square"></i></th>
+            <th><i class="fa-solid fa-heart"></i></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let r of rows){ %>
+          <tr data-ab_id="<%= r.ab_id %>">
+            <td><input class="del_item" type="checkbox" /></td>
+            <td>
+              <a href="#" onclick="deleteItem(event, <%= r.ab_id %>)">
+                <i class="fa-solid fa-trash"></i>
+              </a>
+            </td>
+            <td><%= r.ab_id %></td>
+            <% if(query.keyword){ const k = query.keyword; r.name =
+            r.name.split(k).join(`<b>${k}</b>`); r.mobile =
+            r.mobile.split(k).join(`<b>${k}</b>`); } %>
+            <td><%- r.name %></td>
+            <td><%- r.mobile %></td>
+            <td><%= r.email %></td>
+            <td><%= r.birthday %></td>
+            <td><%= r.address %></td>
+            <td>
+              <a href="/address-book/edit/<%= r.ab_id %>">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </a>
+            </td>
+            <td>
+              <span
+                class="favorite-hearts <%= r.like_id ? 'liked' : '' %>"
+                onclick="toggleLike(event)"
+              >
+                <i class="fa-solid fa-heart"></i>
+                <i class="fa-regular fa-heart"></i>
+              </span>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <%- include("../partials/html-scripts") %>
+  <script>
+    const deleteItem = (e, ab_id) => {
+      e.preventDefault();
+      fetch(`/address-book/api/${ab_id}`, {
+        method: "DELETE",
+      })
+        .then((r) => r.json())
+        .then((result) => {
+          console.log(JSON.stringify(result, null, 4));
+
+          if (result.success) {
+            location.reload();
+          }
+        });
+    };
+
+    const toggleLike = async (e) => {
+      const t = e.currentTarget;
+      const tr = t.closest("tr");
+      const ab_id = tr.getAttribute("data-ab_id");
+      console.log({ ab_id });
+
+      const r = await fetch(`/address-book/api/toggle-like/${ab_id}`, {
+        method: "POST",
+      });
+      const result = await r.json();
+      if (result.success) {
+        if (result.action === "add") {
+          t.classList.add("liked");
+        } else {
+          t.classList.remove("liked");
+        }
+      }
+    };
+    const toggleAll = (e) => {
+      document.querySelectorAll(".del_item").forEach((item) => {
+        item.checked = e.target.checked;
+      });
+    };
+    const deleteSelected = (e) => {
+      const fd = new FormData();
+
+      document.querySelectorAll(".del_item:checked").forEach((item) => {
+        const ab_id = item.closest("tr").getAttribute("data-ab_id");
+        fd.append("i[]", ab_id); // 讓後端拿到的都是陣列
+      });
+
+      fetch(`/address-book/api/del_many`, {
+        method: "DELETE",
+        body: fd,
+      })
+        .then((r) => r.json())
+        .then((result) => {
+          console.log(result);
+          if(result.success){
+            location.reload();
+          }
+        });
+    };
+  </script>
+
+  <%- include("../partials/html-tail") %>
+</div>

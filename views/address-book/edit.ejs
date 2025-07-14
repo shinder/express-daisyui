@@ -1,0 +1,221 @@
+<%- include("../partials/html-head") %>
+<%- include("../partials/html-navbar") %>
+<style>
+  form .mb-3.error input {
+    border: 2px solid red;
+  }
+
+  form .mb-3.error .form-text {
+    color: red;
+    display: block;
+  }
+
+  form .mb-3 .form-text {
+    display: none;
+  }
+
+  .modal-body .alert-success {
+    display: none;
+  }
+
+  .modal-body .alert-warning {
+    display: block;
+  }
+
+  .modal-body.success .alert-success {
+    display: block;
+  }
+
+  .modal-body.success .alert-warning {
+    display: none;
+  }
+</style>
+<div class="container">
+  <div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">編輯通訊錄</h5>
+          <form name="form1" onsubmit="sendData(event)" novalidate>
+            <div class="mb-3">
+              <label for="" class="form-label">編號</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= ab_id %>"
+                disabled
+              />
+            </div>
+            <div class="mb-3">
+              <label for="name" class="form-label">姓名</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                value="<%= name %>"
+              />
+              <div class="form-text"></div>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">電子郵箱</label>
+              <input
+                type="text"
+                class="form-control"
+                id="email"
+                name="email"
+                value="<%= email %>"
+              />
+              <div class="form-text"></div>
+            </div>
+            <div class="mb-3">
+              <label for="mobile" class="form-label">手機</label>
+              <input
+                type="text"
+                class="form-control"
+                id="mobile"
+                name="mobile"
+                value="<%= mobile %>"
+              />
+              <div class="form-text"></div>
+            </div>
+            <div class="mb-3">
+              <label for="birthday" class="form-label">生日</label>
+              <input
+                type="date"
+                class="form-control"
+                id="birthday"
+                name="birthday"
+                value="<%= birthday %>"
+              />
+              <div class="form-text"></div>
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">地址</label>
+              <textarea class="form-control" id="address" name="address">
+<%= address %></textarea
+              >
+            </div>
+
+            <button type="submit" class="btn btn-primary">修改</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">編輯結果</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-success" role="alert">資料編輯成功</div>
+        <div class="alert alert-warning" role="alert">資料沒有修改</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          繼續編輯
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="location.href= document.referrer ? document.referrer : '/address-book' "
+        >
+          回列表頁
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("../partials/html-scripts") %>
+<script>
+    const ab_id = <%- ab_id %>;
+    const modal = new bootstrap.Modal('#exampleModal');
+    const nameField = document.form1.name;
+    const emailField = document.form1.email;
+
+    function validateEmail(email) {
+      const re =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return re.test(email);
+    }
+
+    const sendData = e => {
+      e.preventDefault(); // 不要讓表單以傳統的方式送出
+
+      // 讓欄位的外觀回復原來的狀態
+      nameField.closest('.mb-3').classList.remove('error');
+      emailField.closest('.mb-3').classList.remove('error');
+
+
+      // TODO: 表單欄位檢查
+      let isPass = true; // 有沒有通過檢查
+  /*
+      if (nameField.value.length < 2) {
+        isPass = false;
+        nameField.nextElementSibling.innerHTML = '請填入正確的姓名';
+        nameField.closest('.mb-3').classList.add('error');
+      }
+      if (!validateEmail(emailField.value)) {
+        isPass = false;
+        emailField.nextElementSibling.innerHTML = '請填入正確的 Email';
+        emailField.closest('.mb-3').classList.add('error');
+      }
+  */
+
+      if (!isPass) {
+        return;
+      }
+
+      const fd = new FormData(document.form1);
+
+      fetch(`/address-book/api/${ab_id}`, {
+          method: 'PUT',
+          body: fd,
+        })
+        .then(r => r.json())
+        .then(obj => {
+          console.log(obj);
+          const modalBody = document.querySelector('.modal-body')
+
+          if (obj.success) {
+            modalBody.classList.add('success');
+            modal.show();
+          } else {
+            if(obj.issues?.length){
+              obj.issues?.forEach((issue) => {
+                const name = issue.path[0]; // 欄位名稱
+                const msg = issue.message;
+                const field = document.form1[name]; // 以欄位名稱為 key, 取得欄位參照
+                field.nextElementSibling.innerHTML = msg;
+                field.closest(".mb-3").classList.add("error");
+              });
+            } else {
+              modalBody.classList.remove('success');
+              modal.show();
+            }
+          }
+
+        })
+        .catch(console.warn)
+    }
+</script>
+<%- include("../partials/html-tail") %>
