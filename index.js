@@ -1,5 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import session from "express-session";
+import moment from "moment-timezone";
 import "dotenv/config";
 // import multer from "multer";
 
@@ -25,6 +27,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(cookieParser()); // 全域中介軟體：解析 cookies
+// 設定 session
+app.use(
+  session({
+    // 新用戶沒有使用到 session 物件時不會建立 session 和發送 cookie
+    saveUninitialized: false,
+    resave: false, // 沒變更內容是否強制回存
+    secret: "雜湊 session id 的字串",
+    // cookie: {
+    //   maxAge: 1200_000, // 20分鐘，單位毫秒
+    // },
+  })
+);
 
 // 記錄請求的中介軟體
 const requestLogger = (req, res, next) => {
@@ -132,6 +146,30 @@ app.get("/my-get-cookie", (req, res) => {
   const username = req.cookies.username || "訪客";
   const userToken = req.cookies.userToken || "無效的 Token";
   res.json({ username, userToken });
+});
+
+app.get("/try-sess", (req, res) => {
+  // req.session.my_num = req.session.my_num || 0;
+  req.session.my_num ||= 0;
+  req.session.my_num++;
+  res.json(req.session);
+});
+
+app.get("/try-moment", (req, res) => {
+  const fm = "YYYY-MM-DD HH:mm:ss";
+  const m1 = moment(); // 取得當下時間的 moment 物件
+  const m2 = moment("2024-02-29");
+  const m3 = moment("2025-02-29");
+  res.json({
+    m1: m1.format(fm),
+    m2: m2.format(fm),
+    m3: m3.format(fm),
+    m1v: m1.isValid(), // 是不是有效的日期
+    m2v: m2.isValid(),
+    m3v: m3.isValid(),
+    m1z: m1.tz("Europe/London").format(fm),
+    m2z: m2.tz("Europe/London").format(fm),
+  });
 });
 
 // 404 處理（必須放在所有路由之後）
