@@ -1,108 +1,119 @@
 <%- include("../partials/html-head") %>
 <%- include("../partials/html-navbar") %>
 <style>
-  form .mb-3.error input {
-    border: 2px solid red;
+  .form-control.error {
+    border-color: rgb(248 113 113);
   }
 
-  form .mb-3.error .form-text {
-    color: red;
+  .form-control.error + .text-error text-sm {
+    color: rgb(248 113 113);
     display: block;
   }
 
-  form .mb-3 .form-text {
+  .text-error text-sm {
     display: none;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
   }
 </style>
-<div class="container">
-  <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">新增通訊錄</h5>
-          <form name="form1" onsubmit="sendData(event)" novalidate="">
-            <div class="mb-3">
-              <label for="name" class="form-label">姓名</label>
-              <input type="text" class="form-control" id="name" name="name" />
-              <div class="form-text"></div>
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">email</label>
-              <input type="text" class="form-control" id="email" name="email" />
-              <div class="form-text"></div>
-            </div>
-            <div class="mb-3">
-              <label for="mobile" class="form-label">手機</label>
-              <input
-                type="text"
-                class="form-control"
-                id="mobile"
-                name="mobile"
-              />
-              <div class="form-text"></div>
-            </div>
-            <div class="mb-3">
-              <label for="birthday" class="form-label">生日</label>
-              <input
-                type="date"
-                class="form-control"
-                id="birthday"
-                name="birthday"
-              />
-              <div class="form-text"></div>
-            </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">地址</label>
-              <textarea
-                class="form-control"
-                id="address"
-                name="address"
-              ></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">新增</button>
-          </form>
+<div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
+  <div class="card w-full max-w-lg bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-center text-2xl font-bold mb-6">新增通訊錄</h2>
+      <form name="form1" onsubmit="sendData(event)" novalidate="">
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">姓名</span>
+          </label>
+          <input 
+            type="text" 
+            class="input input-bordered w-full" 
+            id="name" 
+            name="name"
+            placeholder="請輸入姓名"
+          />
+          <div class="text-error text-sm"></div>
         </div>
-      </div>
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">電子郵箱</span>
+          </label>
+          <input 
+            type="email" 
+            class="input input-bordered w-full" 
+            id="email" 
+            name="email"
+            placeholder="請輸入電子郵箱"
+          />
+          <div class="text-error text-sm"></div>
+        </div>
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">手機</span>
+          </label>
+          <input
+            type="tel"
+            class="input input-bordered w-full"
+            id="mobile"
+            name="mobile"
+            placeholder="請輸入手機號碼"
+          />
+          <div class="text-error text-sm"></div>
+        </div>
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">生日</span>
+          </label>
+          <input
+            type="date"
+            class="input input-bordered w-full"
+            id="birthday"
+            name="birthday"
+          />
+          <div class="text-error text-sm"></div>
+        </div>
+        <div class="form-control mb-6">
+          <label class="label">
+            <span class="label-text">地址</span>
+          </label>
+          <textarea
+            class="textarea textarea-bordered w-full"
+            id="address"
+            name="address"
+            placeholder="請輸入地址"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-control">
+          <button type="submit" class="btn btn-primary w-full">新增</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
 <!-- Modal -->
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">新增結果</h1>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-success" role="alert">成功新增資料</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          繼續新增
-        </button>
+<dialog id="successModal" class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg mb-4">新增結果</h3>
+    <div class="alert alert-success mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span>成功新增資料</span>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-secondary mr-2">繼續新增</button>
         <a href="/address-book" class="btn btn-primary">回列表頁</a>
-      </div>
+      </form>
     </div>
   </div>
-</div>
+</dialog>
 <%- include("../partials/html-scripts") %>
 <script>
-  const modal = new bootstrap.Modal("#exampleModal");
+  const modal = document.getElementById("successModal");
   const nameField = document.form1.name;
   const emailField = document.form1.email;
 
@@ -112,25 +123,37 @@
     return re.test(email);
   }
 
-  const sendData = (e) => {
-    e.preventDefault(); // 不要讓表單以傳統的方式送出
+  function clearErrors() {
+    document.querySelectorAll('.input, .textarea').forEach(field => {
+      field.classList.remove('error');
+      field.classList.remove('input-error');
+    });
+    document.querySelectorAll('.text-error text-sm').forEach(text => {
+      text.innerHTML = '';
+      text.style.display = 'none';
+    });
+  }
 
-    // 讓欄位的外觀回復原來的狀態
-    nameField.closest(".mb-3").classList.remove("error");
-    emailField.closest(".mb-3").classList.remove("error");
+  const sendData = (e) => {
+    e.preventDefault();
+
+    // 清除之前的錯誤狀態
+    clearErrors();
 
     // TODO: 表單欄位檢查
-    let isPass = true; // 有沒有通過檢查
+    let isPass = true;
     /*
     if (nameField.value.length < 2) {
       isPass = false;
       nameField.nextElementSibling.innerHTML = "請填入正確的姓名";
-      nameField.closest(".mb-3").classList.add("error");
+      nameField.classList.add("input-error");
+      nameField.nextElementSibling.style.display = "block";
     }
     if (!validateEmail(emailField.value)) {
       isPass = false;
       emailField.nextElementSibling.innerHTML = "請填入正確的 Email";
-      emailField.closest(".mb-3").classList.add("error");
+      emailField.classList.add("input-error");
+      emailField.nextElementSibling.style.display = "block";
     }
     */
     if (!isPass) {
@@ -147,14 +170,17 @@
       .then((obj) => {
         console.log(obj);
         if (obj.success) {
-          modal.show();
+          document.form1.reset();
+          modal.showModal();
         } else {
           obj.issues?.forEach((issue) => {
-            const name = issue.path[0]; // 欄位名稱
+            const name = issue.path[0];
             const msg = issue.message;
-            const field = document.form1[name]; // 以欄位名稱為 key, 取得欄位參照
-            field.nextElementSibling.innerHTML = msg;
-            field.closest(".mb-3").classList.add("error");
+            const field = document.form1[name];
+            const errorText = field.nextElementSibling;
+            errorText.innerHTML = msg;
+            errorText.style.display = "block";
+            field.classList.add("input-error");
           });
         }
       })

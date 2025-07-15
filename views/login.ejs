@@ -36,8 +36,29 @@
     </div>
   </div>
 </div>
+
+<!-- Error Modal -->
+<dialog id="errorModal" class="modal">
+  <div class="modal-box">
+    <h3 class="font-bold text-lg mb-4">登入失敗</h3>
+    <div class="alert alert-error mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span id="errorMessage">帳號或密碼錯誤</span>
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <button class="btn btn-primary">確定</button>
+      </form>
+    </div>
+  </div>
+</dialog>
 <%- include("partials/html-scripts") %>
 <script>
+  const errorModal = document.getElementById("errorModal");
+  const errorMessage = document.getElementById("errorMessage");
+
   const sendData = (e) => {
     e.preventDefault();
     const fd = new FormData(document.form1);
@@ -51,10 +72,15 @@
         if (obj.success) {
           location.href = document.referrer || "/";
         } else {
-          alert("帳號或密碼錯誤");
+          errorMessage.textContent = obj.message || "帳號或密碼錯誤";
+          errorModal.showModal();
         }
       })
-      .catch(console.warn);
+      .catch((error) => {
+        console.warn(error);
+        errorMessage.textContent = "登入時發生錯誤，請稍後再試";
+        errorModal.showModal();
+      });
   };
 </script>
 
