@@ -105,17 +105,17 @@
               <%= cookies.preferredTheme ? cookies.preferredTheme : 'retro' %>
             </span>
           </summary>
-          <ul class="bg-base-100 rounded-t-none p-2 w-32" onclick="changeTheme(event)">
-            <li><a href="#" data-theme="retro">
+          <ul class="bg-base-100 rounded-t-none p-2 w-32">
+            <li><a href="#" onclick="changeTheme('retro')" data-theme="retro">
               <span class="theme-indicator retro"></span>retro
             </a></li>
-            <li><a href="#" data-theme="cupcake">
+            <li><a href="#" onclick="changeTheme('cupcake')" data-theme="cupcake">
               <span class="theme-indicator cupcake"></span>cupcake
             </a></li>
-            <li><a href="#" data-theme="dark">
+            <li><a href="#" onclick="changeTheme('dark')" data-theme="dark">
               <span class="theme-indicator dark"></span>dark
             </a></li>
-            <li><a href="#" data-theme="light">
+            <li><a href="#" onclick="changeTheme('light')" data-theme="light">
               <span class="theme-indicator light"></span>light
             </a></li>
           </ul>

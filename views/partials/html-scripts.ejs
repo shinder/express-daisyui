@@ -3,52 +3,49 @@
 <script>
   // ************* Navbar 主題選擇器 *************
   const themeDropdown = document.querySelector("details.my-theme-selector");
-  // 主題切換功能
-  function changeTheme(event) {
-    const theme = event.target.closest("a").getAttribute("data-theme");
+  const currentThemeIndicator = document.getElementById("currentTheme");
+  const themeItems = document.querySelectorAll(".menu a[data-theme]");
+  
+  // 主題切換功能 - 簡化版本
+  function changeTheme(theme) {
     // 更改 html 元素的 data-theme 屬性
     document.documentElement.setAttribute("data-theme", theme);
-    Cookies.set("preferredTheme", theme, {expires: 365}); // 儲存到 Cookies
-    // 更新當前主題指示器
-    updateCurrentThemeIndicator(theme);
-    // 更新選單中的選中狀態
-    updateActiveThemeMenuItem(theme);
+    
+    // 儲存到 Cookies
+    Cookies.set("preferredTheme", theme, {expires: 365});
+    
+    // 批量更新 UI
+    updateThemeUI(theme);
+    
     // 關閉下拉選單
     themeDropdown.removeAttribute("open");
+    
     // 防止預設連結行為
     event.preventDefault();
+    return false;
   }
 
-  function updateCurrentThemeIndicator(theme) {
-    const indicator = themeDropdown.querySelector("#currentTheme");
-    indicator.textContent = theme;
-    indicator.className = `badge badge-sm ml-1 badge-${
+  // 統一的 UI 更新函數
+  function updateThemeUI(theme) {
+    // 更新主題指示器
+    currentThemeIndicator.textContent = theme;
+    currentThemeIndicator.className = `badge badge-sm ml-1 badge-${
       theme === "dark" ? "neutral" : "primary"
     }`;
-  }
-
-  function updateActiveThemeMenuItem(theme) {
-    // 移除所有主題選單項目的選中類別
-    document.querySelectorAll(".menu a[data-theme]").forEach((item) => {
-      item.classList.remove("active");
+    
+    // 更新選中狀態 - 使用緩存的元素
+    themeItems.forEach(item => {
+      item.classList.toggle("active", item.dataset.theme === theme);
     });
-
-    // 為當前主題添加選中類別
-    const activeItem = document.querySelector(`.menu a[data-theme="${theme}"]`);
-    if (activeItem) {
-      activeItem.classList.add("active");
-    }
   }
 
   // 頁面載入時初始化主題
   function initializeTheme() {
-    // const savedTheme = localStorage.getItem("preferredTheme") || "retro";
     const savedTheme = Cookies.get("preferredTheme") || "retro";
 
     // 應用主題
     document.documentElement.setAttribute("data-theme", savedTheme);
-    updateCurrentThemeIndicator(savedTheme);
-    updateActiveThemeMenuItem(savedTheme);
+    updateThemeUI(savedTheme);
   }
 
   // 點擊外部時自動收合下拉選單
