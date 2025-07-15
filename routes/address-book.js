@@ -220,6 +220,7 @@ router.get("/add", async (req, res) => {
 // *** 修改資料的表單頁
 router.get("/edit/:ab_id", async (req, res) => {
   res.locals.pageTitle = "編輯通訊錄";
+  res.locals.pageName = "ab-edit";
   const item = await getItemData(req);
   if (!item.success) {
     return res.redirect("/address-book"); // 沒取到資料, 回列表頁頁

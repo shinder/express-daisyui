@@ -90,13 +90,13 @@ app.use((req, res, next) => {
       }
     }
     return new URLSearchParams(newObject).toString();
-  }
+  };
   // 標示 <b> 標籤的函數
   res.locals.labelBold = (originStr, labelStr) => {
     if (!originStr || !labelStr) return originStr;
     const regex = new RegExp(`(${labelStr})`, "gi");
     return originStr.replace(regex, "<b>$1</b>");
-  }
+  };
 
   const auth = req.get("Authorization");
   if (auth && auth.indexOf("Bearer ") === 0) {
@@ -132,6 +132,7 @@ app.get("/try-qs", (req, res) => {
 });
 
 app.get("/try-post-form", (req, res) => {
+  res.locals.pageName = "try-post-form";
   res.render("try-post-form");
 });
 

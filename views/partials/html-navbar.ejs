@@ -72,6 +72,15 @@
   .menu details {
     position: relative;
   }
+  
+  /* 導航分隔線樣式 */
+  .nav-divider {
+    width: 1px;
+    height: 1.5rem;
+    background-color: red;
+    margin: 0 0.5rem;
+  }
+
 </style>
 <div class="container mx-auto navbar bg-base-100 shadow-sm">
   <div class="flex-1">
@@ -79,28 +88,66 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
+      <!-- 功能區塊 -->
       <li>
-        <a href="/address-book">通訊錄列表</a>
+        <a href="/sales-array" class="<%= pageName==='sales-array' ? 'border pointer-events-none' : '' %>">
+          sales-array
+        </a>
       </li>
       <li>
-        <a href="/address-book/add">新增通訊錄</a>
+        <a href="/try-post-form" class="<%= pageName==='try-post-form' ? 'border pointer-events-none' : '' %>">
+          try-post-form
+        </a>
       </li>
+      <li>
+        <a href="/address-book" class="<%= pageName==='ab-list' ? 'border pointer-events-none' : '' %>">
+          <i class="fa-solid fa-address-book mr-1"></i>通訊錄列表
+        </a>
+      </li>
+      <li>
+        <a href="/address-book/add" class="<%= pageName==='ab-add' ? 'border pointer-events-none' : '' %>">
+          <i class="fa-solid fa-plus mr-1"></i>新增通訊錄
+        </a>
+      </li>
+      <% if(pageName==='ab-edit'){ %>
+      <li>
+        <a class="active cursor-default">
+          <i class="fa-solid fa-pen-to-square mr-1"></i>編輯通訊錄
+        </a>
+      </li>
+      <% } %>
+      
+      <!-- 分隔線 -->
+      <li><div class="nav-divider"></div></li>
+      
+      <!-- 用戶區塊 -->
       <% if(session.admin){ %>
       <li>
-        <a><%= session.admin.nickname %></a>
+        <a class="cursor-default pointer-events-none">
+          <i class="fa-solid fa-user mr-1"></i><%= session.admin.nickname %>
+        </a>
       </li>
       <li>
-        <a href="/logout">登出</a>
+        <a href="/logout" class="text-warning">
+          <i class="fa-solid fa-right-from-bracket mr-1"></i>登出
+        </a>
       </li>
       <% } else { %>
       <li>
-        <a class="<%= pageName==='login' ? 'active':'' %>" href="/login">登入</a>
+        <a class="<%= pageName==='login' ? 'border pointer-events-none':'' %>" href="/login">
+          <i class="fa-solid fa-right-to-bracket mr-1"></i>登入
+        </a>
       </li>
       <% } %>
+      
+      <!-- 分隔線 -->
+      <li><div class="nav-divider"></div></li>
+      
+      <!-- 設定區塊 -->
       <li>
         <details class="my-theme-selector">
           <summary>
-            場景配色
+            <i class="fa-solid fa-palette mr-1"></i>場景配色
             <span id="currentTheme" class="badge badge-sm ml-1">
               <%= cookies.preferredTheme ? cookies.preferredTheme : 'retro' %>
             </span>
