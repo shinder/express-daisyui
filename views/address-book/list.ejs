@@ -95,7 +95,7 @@
       <table class="table table-zebra border border-base-300">
         <thead class="bg-base-300">
           <tr>
-            <th>
+            <th class="text-center">
               <input
                 class="toggle-all"
                 type="checkbox"
@@ -107,7 +107,7 @@
               </button>
             </th>
             <th><i class="fa-solid fa-trash"></i></th>
-            <th>#</th>
+            <th class="bg-base-100">編號</th>
             <th>姓名</th>
             <th>手機</th>
             <th>電郵</th>
@@ -120,13 +120,13 @@
         <tbody>
           <% for(let r of rows){ %>
           <tr data-ab_id="<%= r.ab_id %>">
-            <td><input class="del_item" type="checkbox" /></td>
+            <td class="text-center"><input class="del_item" type="checkbox" /></td>
             <td>
               <a href="#" onclick="deleteItem(event, <%= r.ab_id %>)">
                 <i class="fa-solid fa-trash"></i>
               </a>
             </td>
-            <td><%= r.ab_id %></td>
+            <td class="bg-base-300"><%= r.ab_id %></td>
             <td><%- labelBold(r.name, query.keyword) %></td>
             <td><%- labelBold(r.mobile, query.keyword) %></td>
             <td><%= r.email %></td>
