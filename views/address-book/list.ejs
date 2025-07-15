@@ -59,13 +59,13 @@
       <div class="join mt-4">
         <a
           class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>"
-          href="?<%- new URLSearchParams({...query, page:1}) %>"
+          href="?<%- objToUrlencoded({...query, page: 1}) %>"
         >
           <i class="fa-solid fa-angles-left"></i>
         </a>
         <a
           class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>"
-          href="?<%- new URLSearchParams({...query, page:page-1}) %>"
+          href="?<%- objToUrlencoded({...query, page: page-1}) %>"
         >
           <i class="fa-solid fa-angle-left"></i>
         </a>
@@ -75,19 +75,19 @@
         <% } else { %>
         <a
           class="join-item btn btn-sm"
-          href="?<%- new URLSearchParams({...query, page: i}) %>"
+          href="?<%- objToUrlencoded({...query, page: i}) %>"
           ><%= i %></a
         >
         <% } %> <% } %>
         <a
           class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>"
-          href="?<%- new URLSearchParams({...query, page:page+1}) %>"
+          href="?<%- objToUrlencoded({...query, page: page+1}) %>"
         >
           <i class="fa-solid fa-angle-right"></i>
         </a>
         <a
           class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>"
-          href="?<%- new URLSearchParams({...query, page:totalPages}) %>"
+          href="?<%- objToUrlencoded({...query, page: totalPages}) %>"
         >
           <i class="fa-solid fa-angles-right"></i>
         </a>
@@ -129,11 +129,8 @@
               </a>
             </td>
             <td><%= r.ab_id %></td>
-            <% if(query.keyword){ const k = query.keyword; r.name =
-            r.name.split(k).join('<b>' + k + '</b>'); r.mobile =
-            r.mobile.split(k).join('<b>' + k + '</b>'); } %>
-            <td><%- r.name %></td>
-            <td><%- r.mobile %></td>
+            <td><%- labelBold(r.name, query.keyword) %></td>
+            <td><%- labelBold(r.mobile, query.keyword) %></td>
             <td><%= r.email %></td>
             <td><%= r.birthday %></td>
             <td><%= r.address %></td>

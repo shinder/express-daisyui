@@ -81,6 +81,23 @@ app.use((req, res, next) => {
   res.locals.session = req.session; // 讓所有的 EJS 可以用 session 變數
   res.locals.query = req.query;
   res.locals.cookies = req.cookies;
+  // *** helper 函數 ***
+  // 將物件轉換為 URL 查詢字串
+  res.locals.objToUrlencoded = (object) => {
+    const newObject = structuredClone(object);
+    for (const key in newObject) {
+      if (!newObject[key]) {
+        delete newObject[key]; // falsy 的值不加入
+      }
+    }
+    return new URLSearchParams(newObject).toString();
+  }
+  // 標示 <b> 標籤的函數
+  res.locals.labelBold = (originStr, labelStr) => {
+    if (!originStr || !labelStr) return originStr;
+    const regex = new RegExp(`(${labelStr})`, "gi");
+    return originStr.replace(regex, "<b>$1</b>");
+  }
 
   const auth = req.get("Authorization");
   if (auth && auth.indexOf("Bearer ") === 0) {
