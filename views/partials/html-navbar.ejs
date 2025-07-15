@@ -23,11 +23,24 @@
       </li>
       <% } %>
       <li>
-        <details>
-          <summary>Parent</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a>Link 1</a></li>
-            <li><a>Link 2</a></li>
+        <details class="my-theme-selector">
+          <summary>
+            場景配色
+            <span id="currentTheme" class="badge badge-sm ml-1"></span>
+          </summary>
+          <ul class="bg-base-100 rounded-t-none p-2 w-32">
+            <li><a href="#" onclick="changeTheme('retro')" data-theme="retro">
+              <span class="theme-indicator retro"></span>retro
+            </a></li>
+            <li><a href="#" onclick="changeTheme('cupcake')" data-theme="cupcake">
+              <span class="theme-indicator cupcake"></span>cupcake
+            </a></li>
+            <li><a href="#" onclick="changeTheme('dark')" data-theme="dark">
+              <span class="theme-indicator dark"></span>dark
+            </a></li>
+            <li><a href="#" onclick="changeTheme('light')" data-theme="light">
+              <span class="theme-indicator light"></span>light
+            </a></li>
           </ul>
         </details>
       </li>
