@@ -1,56 +1,108 @@
 <%- include("../partials/html-head") %> <%- include("../partials/html-navbar")
 %>
 <div class="container mx-auto">
-  <div>
-    <div class="join mt-4">
-      <a class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>" href="?page=1">
-        <i class="fa-solid fa-angles-left"></i>
-      </a>
-      <a class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>" href="?page=<%= page-1 %>">
-        <i class="fa-solid fa-angle-left"></i>
-      </a>
-      <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
-      if(page==i){ %>
-      <span class="join-item btn btn-sm btn-active cursor-default"><%= i %></span>
-      <% } else { %>
-      <a class="join-item btn btn-sm" href="?page=<%= i %>"><%= i %></a>
-      <% } %> <% } %>
-      <a class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>" href="?page=<%= page+1 %>">
-        <i class="fa-solid fa-angle-right"></i>
-      </a>
-      <a class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>" href="?page=<%= totalPages %>">
-        <i class="fa-solid fa-angles-right"></i>
-      </a>
+  <div class="">
+    <div class="">
+      <form novalidate class="flex justify-end items-end mt-4">
+        <label class="input pr-2">
+          <svg
+            class="h-[1em] opacity-50"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <g
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="2.5"
+              fill="none"
+              stroke="currentColor"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </g>
+          </svg>
+          <input
+            type="search"
+            name="keyword"
+            placeholder="Search"
+            value="<%= query.keyword || '' %>"
+          />
+          <button class="btn btn-info btn-xs rounded-full">搜尋</button>
+        </label>
+      </form>
     </div>
-  </div>
+    <div>
+      <div class="join mt-4">
+        <a
+          class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>"
+          href="?<%- new URLSearchParams({...query, page:1}) %>"
+        >
+          <i class="fa-solid fa-angles-left"></i>
+        </a>
+        <a
+          class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>"
+          href="?<%- new URLSearchParams({...query, page:page-1}) %>"
+        >
+          <i class="fa-solid fa-angle-left"></i>
+        </a>
+        <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
+        if(page==i){ %>
+        <span class="join-item btn btn-sm btn-active cursor-default"
+          ><%= i %></span
+        >
+        <% } else { %>
+        <a
+          class="join-item btn btn-sm"
+          href="?<%- new URLSearchParams({...query, page: i}) %>"
+          ><%= i %></a
+        >
+        <% } %> <% } %>
+        <a
+          class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>"
+          href="?<%- new URLSearchParams({...query, page:page+1}) %>"
+        >
+          <i class="fa-solid fa-angle-right"></i>
+        </a>
+        <a
+          class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>"
+          href="?<%- new URLSearchParams({...query, page:totalPages}) %>"
+        >
+          <i class="fa-solid fa-angles-right"></i>
+        </a>
+      </div>
+    </div>
 
-  <div class="overflow-x-auto mt-4">
-    <table class="table table-zebra border border-base-300">
-      <thead class="bg-base-300">
-        <tr>
-          <th>#</th>
-          <th>姓名</th>
-          <th>手機</th>
-          <th>電郵</th>
-          <th>生日</th>
-          <th>地址</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for(let r of rows){ %>
-        <tr>
-          <td><%= r.ab_id %></td>
-          <td><%= r.name %></td>
-          <td><%= r.mobile %></td>
-          <td><%= r.email %></td>
-          <td><%= r.birthday %></td>
-          <td><%= r.address %></td>
-        </tr>
-        <% } %>
-      </tbody>
-    </table>
-  </div>
+    <div class="overflow-x-auto mt-4">
+      <table class="table table-zebra border border-base-300">
+        <thead class="bg-base-300">
+          <tr>
+            <th>#</th>
+            <th>姓名</th>
+            <th>手機</th>
+            <th>電郵</th>
+            <th>生日</th>
+            <th>地址</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(let r of rows){ %>
+          <tr>
+            <td><%= r.ab_id %></td>
+            <% if(query.keyword){ const k = query.keyword; r.name =
+            r.name.split(k).join('<b>' + k + '</b>'); r.mobile =
+            r.mobile.split(k).join('<b>' + k + '</b>'); } %>
+            <td><%- r.name %></td>
+            <td><%- r.mobile %></td>
+            <td><%= r.email %></td>
+            <td><%= r.birthday %></td>
+            <td><%= r.address %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
 
-  <%- include("../partials/html-scripts") %> <%-
-  include("../partials/html-tail") %>
+    <%- include("../partials/html-scripts") %> <%-
+    include("../partials/html-tail") %>
+  </div>
 </div>
