@@ -101,7 +101,9 @@
         <details class="my-theme-selector">
           <summary>
             場景配色
-            <span id="currentTheme" class="badge badge-sm ml-1"></span>
+            <span id="currentTheme" class="badge badge-sm ml-1">
+              <%= cookies.preferredTheme ? cookies.preferredTheme : 'retro' %>
+            </span>
           </summary>
           <ul class="bg-base-100 rounded-t-none p-2 w-32" onclick="changeTheme(event)">
             <li><a href="#" data-theme="retro">
