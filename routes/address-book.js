@@ -198,6 +198,7 @@ router.use((req, res, next) => {
 */
 // ****** 頁面 的路由 *****************
 router.get("/", async (req, res) => {
+  res.locals.pageTitle = "通訊錄列表";
   res.locals.pageName = "ab-list";
   const data = await getListData(req);
   if (data.redirect) {
@@ -212,11 +213,13 @@ router.get("/", async (req, res) => {
 });
 // *** 新增資料的表單頁
 router.get("/add", async (req, res) => {
+  res.locals.pageTitle = "新增通訊錄";
   res.locals.pageName = "ab-add";
   res.render("address-book/add");
 });
 // *** 修改資料的表單頁
 router.get("/edit/:ab_id", async (req, res) => {
+  res.locals.pageTitle = "編輯通訊錄";
   const item = await getItemData(req);
   if (!item.success) {
     return res.redirect("/address-book"); // 沒取到資料, 回列表頁頁

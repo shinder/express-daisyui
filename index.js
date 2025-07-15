@@ -76,7 +76,6 @@ app.use(requestLogger);
 
 // ************* 自訂的頂層 "中間件, 中介軟體" *************
 app.use((req, res, next) => {
-  res.locals.title = "小新的網站";
   res.locals.pageName = "";
   res.locals.session = req.session; // 讓所有的 EJS 可以用 session 變數
   res.locals.query = req.query;
@@ -112,12 +111,12 @@ app.use((req, res, next) => {
 // 路由處理器
 // 1. HTTP 方法, 2. URL
 app.get("/", (req, res) => {
-  res.locals.title = "首頁 - " + res.locals.title;
+  res.locals.pageTitle = "首頁";
   res.render("home", { name: "Shinder" });
 });
 
 app.get("/sales-array", (req, res) => {
-  res.locals.title = "Sales - " + res.locals.title;
+  res.locals.pageTitle = "Sales";
   res.locals.pageName = "sales-array";
   const sales = [
     { name: "Bill", age: 28, id: "A001" },
