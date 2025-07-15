@@ -80,6 +80,7 @@ app.use((req, res, next) => {
   res.locals.pageName = "";
   res.locals.session = req.session; // 讓所有的 EJS 可以用 session 變數
   res.locals.query = req.query;
+  res.locals.cookies = req.cookies;
 
   const auth = req.get("Authorization");
   if (auth && auth.indexOf("Bearer ") === 0) {

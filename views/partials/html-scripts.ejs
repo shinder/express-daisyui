@@ -1,164 +1,73 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
-<style>
-  .theme-indicator {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-    border: 1px solid rgba(0,0,0,0.2);
-  }
-  .theme-indicator.retro { background: linear-gradient(45deg, #ef9995, #8b5a3c); }
-  .theme-indicator.cupcake { background: linear-gradient(45deg, #65c3c8, #faf7f5); }
-  .theme-indicator.dark { background: linear-gradient(45deg, #1f2937, #374151); }
-  .theme-indicator.light { background: linear-gradient(45deg, #ffffff, #f3f4f6); }
-  
-  /* 修復選中主題樣式，使用固定顏色 */
-  .menu details ul li a[data-theme].active {
-    background-color: #3b82f6 !important;
-    color: #ffffff !important;
-  }
-  
-  /* 確保主題項目的正常懸停行為 */
-  .menu details ul li a[data-theme]:not(.active):hover {
-    background-color: #f3f4f6 !important;
-    color: #1f2937 !important;
-  }
-  
-  /* 移除非選中主題選單項目的背景 */
-  .menu li a[data-theme]:not(.active) {
-    background-color: transparent;
-  }
-  
-  /* 確保下拉選單有不透明背景和適當的層級 */
-  .menu details ul {
-    background-color: #ffffff !important;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    z-index: 9999 !important;
-    position: absolute;
-    color: #1f2937;
-  }
-  
-  /* 專門針對主題下拉選單的額外樣式 */
-  .menu details ul.bg-base-100 {
-    background-color: #ffffff !important;
-    opacity: 1;
-    z-index: 9999 !important;
-    color: #1f2937 !important;
-  }
-  
-  /* 修復下拉選單項目的文字顏色以確保可讀性 */
-  .menu details ul li a {
-    color: #1f2937 !important;
-  }
-  
-  /* 下拉選單項目的懸停狀態，使用固定顏色 */
-  .menu details ul li a:hover {
-    background-color: #f3f4f6 !important;
-    color: #1f2937 !important;
-  }
-  
-  /* 確保 details 元素本身有適當的定位上下文 */
-  .menu details {
-    position: relative;
-  }
-</style>
-
 <script>
+  // ************* Navbar 主題選擇器 *************
+  const themeDropdown = document.querySelector("details.my-theme-selector");
   // 主題切換功能
-  function changeTheme(theme) {
+  function changeTheme(event) {
+    const theme = event.target.closest("a").getAttribute("data-theme");
     // 更改 html 元素的 data-theme 屬性
-    document.documentElement.setAttribute('data-theme', theme);
-    
-    // 儲存到 localStorage
-    localStorage.setItem('preferred-theme', theme);
-    
+    document.documentElement.setAttribute("data-theme", theme);
+    Cookies.set("preferredTheme", theme, {expires: 365}); // 儲存到 Cookies
     // 更新當前主題指示器
     updateCurrentThemeIndicator(theme);
-    
     // 更新選單中的選中狀態
     updateActiveThemeMenuItem(theme);
-    
     // 關閉下拉選單
-    closeThemeDropdown();
-    
+    themeDropdown.removeAttribute("open");
     // 防止預設連結行為
     event.preventDefault();
-    return false;
   }
-  
-  function closeThemeDropdown() {
-    // 尋找 details 元素（下拉選單）並關閉它
-    const themeDropdown = document.querySelector('details.my-theme-selector');
-    themeDropdown.removeAttribute('open');
-    /*
-    if (!themeDropdown) {
-      // 備用方案：透過檢查 summary 文字內容來尋找
-      const allDetails = document.querySelectorAll('details');
-      allDetails.forEach(detail => {
-        const summary = detail.querySelector('summary');
-        if (summary && summary.textContent.includes('場景配色')) {
-          detail.removeAttribute('open');
-        }
-      });
-    } else {
-      themeDropdown.removeAttribute('open');
-    }
-      */
-  }
-  
+
   function updateCurrentThemeIndicator(theme) {
-    const indicator = document.getElementById('currentTheme');
-    if (indicator) {
-      indicator.textContent = theme;
-      indicator.className = `badge badge-sm ml-1 badge-${theme === 'dark' ? 'neutral' : 'primary'}`;
-    }
+    const indicator = themeDropdown.querySelector("#currentTheme");
+    indicator.textContent = theme;
+    indicator.className = `badge badge-sm ml-1 badge-${
+      theme === "dark" ? "neutral" : "primary"
+    }`;
   }
-  
+
   function updateActiveThemeMenuItem(theme) {
     // 移除所有主題選單項目的選中類別
-    document.querySelectorAll('.menu a[data-theme]').forEach(item => {
-      item.classList.remove('active');
+    document.querySelectorAll(".menu a[data-theme]").forEach((item) => {
+      item.classList.remove("active");
     });
-    
+
     // 為當前主題添加選中類別
     const activeItem = document.querySelector(`.menu a[data-theme="${theme}"]`);
     if (activeItem) {
-      activeItem.classList.add('active');
+      activeItem.classList.add("active");
     }
   }
-  
+
   // 頁面載入時初始化主題
   function initializeTheme() {
-    // 從 localStorage 獲取儲存的主題，或預設為 'retro'
-    const savedTheme = localStorage.getItem('preferred-theme') || 'retro';
-    
+    // const savedTheme = localStorage.getItem("preferredTheme") || "retro";
+    const savedTheme = Cookies.get("preferredTheme") || "retro";
+
     // 應用主題
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
     updateCurrentThemeIndicator(savedTheme);
     updateActiveThemeMenuItem(savedTheme);
   }
-  
+
   // 點擊外部時自動收合下拉選單
   function setupDropdownAutoClose() {
-    document.addEventListener('click', function(event) {
+    document.addEventListener("click", function (event) {
       // 尋找所有 details 元素（下拉選單）
-      const allDetails = document.querySelectorAll('details[open]');
-      
-      allDetails.forEach(detail => {
+      const allDetails = document.querySelectorAll("details[open]");
+
+      allDetails.forEach((detail) => {
         // 檢查點擊是否在此下拉選單外部
         if (!detail.contains(event.target)) {
-          detail.removeAttribute('open');
+          detail.removeAttribute("open");
         }
       });
     });
   }
-  
+
   // DOM 準備就緒時執行
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener("DOMContentLoaded", function () {
     initializeTheme();
     setupDropdownAutoClose();
   });
