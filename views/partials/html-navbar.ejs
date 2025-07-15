@@ -10,6 +10,27 @@
       <li>
         <a href="/address-book/add">新增通訊錄</a>
       </li>
+      <% if(session.admin){ %>
+      <li>
+        <a><%= session.admin.nickname %></a>
+      </li>
+      <li>
+        <a href="/logout">登出</a>
+      </li>
+      <% } else { %>
+      <li>
+        <a class="<%= pageName=='login' ? 'active':'' %>" href="/login">登入</a>
+      </li>
+      <% } %>
+      <li>
+        <details>
+          <summary>Parent</summary>
+          <ul class="bg-base-100 rounded-t-none p-2">
+            <li><a>Link 1</a></li>
+            <li><a>Link 2</a></li>
+          </ul>
+        </details>
+      </li>
     </ul>
   </div>
 </div>
