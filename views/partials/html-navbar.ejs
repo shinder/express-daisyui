@@ -73,13 +73,6 @@
     position: relative;
   }
   
-  /* 導航分隔線樣式 */
-  .nav-divider {
-    width: 1px;
-    height: 1.5rem;
-    background-color: red;
-    margin: 0 0.5rem;
-  }
 
 </style>
 <div class="container mx-auto navbar bg-base-100 shadow-sm">
@@ -117,9 +110,6 @@
       </li>
       <% } %>
       
-      <!-- 分隔線 -->
-      <li><div class="nav-divider"></div></li>
-      
       <!-- 用戶區塊 -->
       <% if(session.admin){ %>
       <li>
@@ -139,9 +129,6 @@
         </a>
       </li>
       <% } %>
-      
-      <!-- 分隔線 -->
-      <li><div class="nav-divider"></div></li>
       
       <!-- 設定區塊 -->
       <li>
