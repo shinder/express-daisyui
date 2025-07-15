@@ -4,17 +4,6 @@
   .form-control.error {
     border-color: rgb(248 113 113);
   }
-
-  .form-control.error + .text-error text-sm {
-    color: rgb(248 113 113);
-    display: block;
-  }
-
-  .text-error text-sm {
-    display: none;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-  }
 </style>
 <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
   <div class="card w-full max-w-lg bg-base-100 shadow-xl">
@@ -128,7 +117,7 @@
       field.classList.remove('error');
       field.classList.remove('input-error');
     });
-    document.querySelectorAll('.text-error text-sm').forEach(text => {
+    document.querySelectorAll('.text-error').forEach(text => {
       text.innerHTML = '';
       text.style.display = 'none';
     });
