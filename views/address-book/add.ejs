@@ -123,7 +123,7 @@
     });
   }
 
-  const sendData = (e) => {
+  const sendData = async (e) => {
     e.preventDefault();
 
     // 清除之前的錯誤狀態
@@ -151,29 +151,30 @@
 
     const fd = new FormData(document.form1);
 
-    fetch("/address-book/api", {
-      method: "POST",
-      body: fd,
-    })
-      .then((r) => r.json())
-      .then((obj) => {
-        console.log(obj);
-        if (obj.success) {
-          document.form1.reset();
-          modal.showModal();
-        } else {
-          obj.issues?.forEach((issue) => {
-            const name = issue.path[0];
-            const msg = issue.message;
-            const field = document.form1[name];
-            const errorText = field.nextElementSibling;
-            errorText.innerHTML = msg;
-            errorText.style.display = "block";
-            field.classList.add("input-error");
-          });
-        }
-      })
-      .catch(console.warn);
+    try {
+      const obj = await apiRequest("/address-book/api", {
+        method: "POST",
+        body: fd,
+      }, '新增聯絡人');
+      
+      if (obj.success) {
+        document.form1.reset();
+        modal.showModal();
+      } else {
+        // 處理驗證錯誤
+        obj.issues?.forEach((issue) => {
+          const name = issue.path[0];
+          const msg = issue.message;
+          const field = document.form1[name];
+          const errorText = field.nextElementSibling;
+          errorText.innerHTML = msg;
+          errorText.style.display = "block";
+          field.classList.add("input-error");
+        });
+      }
+    } catch (error) {
+      // 錯誤已由 apiRequest 處理
+    }
   };
 </script>
 <%- include("../partials/html-tail") %>

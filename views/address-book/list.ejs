@@ -155,37 +155,43 @@
 
   <%- include("../partials/html-scripts") %>
   <script>
-    const deleteItem = (e, ab_id) => {
+    const deleteItem = async (e, ab_id) => {
       e.preventDefault();
-      fetch(`/address-book/api/${ab_id}`, {
-        method: "DELETE",
-      })
-        .then((r) => r.json())
-        .then((result) => {
-          console.log(JSON.stringify(result, null, 4));
-
-          if (result.success) {
-            location.reload();
-          }
-        });
+      try {
+        const result = await apiRequest(`/address-book/api/${ab_id}`, {
+          method: "DELETE",
+        }, '刪除聯絡人');
+        
+        if (result.success) {
+          showSuccessMessage('聯絡人已成功刪除');
+          setTimeout(() => location.reload(), 1000);
+        }
+      } catch (error) {
+        // 錯誤已由 apiRequest 處理
+      }
     };
 
     const toggleLike = async (e) => {
       const t = e.currentTarget;
       const tr = t.closest("tr");
       const ab_id = tr.getAttribute("data-ab_id");
-      console.log({ ab_id });
 
-      const r = await fetch(`/address-book/api/toggle-like/${ab_id}`, {
-        method: "POST",
-      });
-      const result = await r.json();
-      if (result.success) {
-        if (result.action === "add") {
-          t.classList.add("liked");
-        } else {
-          t.classList.remove("liked");
+      try {
+        const result = await apiRequest(`/address-book/api/toggle-like/${ab_id}`, {
+          method: "POST",
+        }, '切換收藏狀態');
+        
+        if (result.success) {
+          if (result.action === "add") {
+            t.classList.add("liked");
+            showSuccessMessage('已加入收藏', 1500);
+          } else {
+            t.classList.remove("liked");
+            showSuccessMessage('已取消收藏', 1500);
+          }
         }
+      } catch (error) {
+        // 錯誤已由 apiRequest 處理
       }
     };
     const toggleAll = (e) => {
@@ -193,25 +199,33 @@
         item.checked = e.target.checked;
       });
     };
-    const deleteSelected = (e) => {
-      const fd = new FormData();
+    const deleteSelected = async (e) => {
+      const checkedItems = document.querySelectorAll(".del_item:checked");
+      
+      if (checkedItems.length === 0) {
+        handleApiError('請至少選擇一個要刪除的項目', '批量刪除');
+        return;
+      }
 
-      document.querySelectorAll(".del_item:checked").forEach((item) => {
+      const fd = new FormData();
+      checkedItems.forEach((item) => {
         const ab_id = item.closest("tr").getAttribute("data-ab_id");
-        fd.append("i[]", ab_id); // 讓後端拿到的都是陣列
+        fd.append("i[]", ab_id);
       });
 
-      fetch(`/address-book/api/del_many`, {
-        method: "DELETE",
-        body: fd,
-      })
-        .then((r) => r.json())
-        .then((result) => {
-          console.log(result);
-          if(result.success){
-            location.reload();
-          }
-        });
+      try {
+        const result = await apiRequest(`/address-book/api/del_many`, {
+          method: "DELETE",
+          body: fd,
+        }, '批量刪除聯絡人');
+        
+        if (result.success) {
+          showSuccessMessage(`已成功刪除 ${checkedItems.length} 個聯絡人`);
+          setTimeout(() => location.reload(), 1000);
+        }
+      } catch (error) {
+        // 錯誤已由 apiRequest 處理
+      }
     };
   </script>
 

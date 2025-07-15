@@ -167,7 +167,7 @@
       });
     }
 
-    const sendData = e => {
+    const sendData = async e => {
       e.preventDefault();
 
       // 清除之前的錯誤狀態
@@ -196,40 +196,40 @@
 
       const fd = new FormData(document.form1);
 
-      fetch(`/address-book/api/${ab_id}`, {
+      try {
+        const obj = await apiRequest(`/address-book/api/${ab_id}`, {
           method: 'PUT',
           body: fd,
-        })
-        .then(r => r.json())
-        .then(obj => {
-          console.log(obj);
-          const successAlert = modal.querySelector('.alert-success');
-          const warningAlert = modal.querySelector('.alert-warning');
+        }, '編輯聯絡人');
+        
+        const successAlert = modal.querySelector('.alert-success');
+        const warningAlert = modal.querySelector('.alert-warning');
 
-          if (obj.success) {
-            successAlert.style.display = 'flex';
-            warningAlert.style.display = 'none';
-            modal.showModal();
+        if (obj.success) {
+          successAlert.style.display = 'flex';
+          warningAlert.style.display = 'none';
+          modal.showModal();
+        } else {
+          if(obj.issues?.length){
+            // 處理驗證錯誤
+            obj.issues?.forEach((issue) => {
+              const name = issue.path[0];
+              const msg = issue.message;
+              const field = document.form1[name];
+              const errorText = field.nextElementSibling;
+              errorText.innerHTML = msg;
+              errorText.style.display = 'block';
+              field.classList.add('input-error');
+            });
           } else {
-            if(obj.issues?.length){
-              obj.issues?.forEach((issue) => {
-                const name = issue.path[0];
-                const msg = issue.message;
-                const field = document.form1[name];
-                const errorText = field.nextElementSibling;
-                errorText.innerHTML = msg;
-                errorText.style.display = 'block';
-                field.classList.add('input-error');
-              });
-            } else {
-              successAlert.style.display = 'none';
-              warningAlert.style.display = 'flex';
-              modal.showModal();
-            }
+            successAlert.style.display = 'none';
+            warningAlert.style.display = 'flex';
+            modal.showModal();
           }
-
-        })
-        .catch(console.warn)
+        }
+      } catch (error) {
+        // 錯誤已由 apiRequest 處理
+      }
     }
 </script>
 <%- include("../partials/html-tail") %>
