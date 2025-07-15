@@ -1,30 +1,38 @@
 <%- include("partials/html-head") %>
 <%- include("partials/html-navbar") %>
-<div class="container">
-  <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">管理者登入</h5>
-          <form name="form1" onsubmit="sendData(event)" novalidate="">
-            <div class="mb-3">
-              <label for="email" class="form-label">電子郵箱</label>
-              <input type="text" class="form-control" id="email" name="email"/>
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">密碼</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-              />
-            </div>
-            <button type="submit" class="btn btn-primary">登入</button>
-          </form>
+<div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
+  <div class="card w-full max-w-md bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-center text-2xl font-bold mb-6">管理者登入</h2>
+      <form name="form1" onsubmit="sendData(event)" novalidate>
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">電子郵箱</span>
+          </label>
+          <input 
+            type="text" 
+            class="input input-bordered w-full" 
+            id="email" 
+            name="email"
+            placeholder="請輸入電子郵箱"
+          />
         </div>
-      </div>
+        <div class="form-control mb-6">
+          <label class="label">
+            <span class="label-text">密碼</span>
+          </label>
+          <input
+            type="password"
+            class="input input-bordered w-full"
+            id="password"
+            name="password"
+            placeholder="請輸入密碼"
+          />
+        </div>
+        <div class="form-control">
+          <button type="submit" class="btn btn-primary w-full">登入</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

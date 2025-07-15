@@ -1,38 +1,27 @@
 <%- include("../partials/html-head") %> <%- include("../partials/html-navbar")
 %>
-<div class="container mx-auto px-4">
-  <div class="mb-4">
-    <nav aria-label="Page navigation example">
-      <div class="btn-group">
-        <a class="btn <%= page==1 ? 'btn-disabled' : '' %>" href="?page=1">
-          <i class="fa-solid fa-angles-left"></i>
-        </a>
-        <a
-          class="btn <%= page==1 ? 'btn-disabled' : '' %>"
-          href="?page=<%= page-1 %>"
-        >
-          <i class="fa-solid fa-angle-left"></i>
-        </a>
-        <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
-        if(page==i){ %>
-        <span class="btn btn-active"><%= i %></span>
-        <% } else { %>
-        <a class="btn" href="?page=<%= i %>"><%= i %></a>
-        <% } %> <% } %>
-        <a
-          class="btn <%= page==totalPages ? 'btn-disabled' : '' %>"
-          href="?page=<%= page+1 %>"
-        >
-          <i class="fa-solid fa-angle-right"></i>
-        </a>
-        <a
-          class="btn <%= page==totalPages ? 'btn-disabled' : '' %>"
-          href="?page=<%= totalPages %>"
-        >
-          <i class="fa-solid fa-angles-right"></i>
-        </a>
-      </div>
-    </nav>
+<div class="container mx-auto">
+  <div>
+    <div class="join mt-4">
+      <a class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>" href="?page=1">
+        <i class="fa-solid fa-angles-left"></i>
+      </a>
+      <a class="join-item btn btn-sm <%= page==1 ? 'btn-disabled' : '' %>" href="?page=<%= page-1 %>">
+        <i class="fa-solid fa-angle-left"></i>
+      </a>
+      <% for(let i=page-5; i<=page+5; i++) if(i>=1 && i<=totalPages){ %> <%
+      if(page==i){ %>
+      <span class="join-item btn btn-sm btn-active cursor-default"><%= i %></span>
+      <% } else { %>
+      <a class="join-item btn btn-sm" href="?page=<%= i %>"><%= i %></a>
+      <% } %> <% } %>
+      <a class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>" href="?page=<%= page+1 %>">
+        <i class="fa-solid fa-angle-right"></i>
+      </a>
+      <a class="join-item btn btn-sm <%= page==totalPages ? 'btn-disabled' : '' %>" href="?page=<%= totalPages %>">
+        <i class="fa-solid fa-angles-right"></i>
+      </a>
+    </div>
   </div>
 
   <div class="overflow-x-auto mt-4">
